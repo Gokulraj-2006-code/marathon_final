@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run Beyond Limits 2026 — Official Links</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(160deg, #0f172a, #312e81); min-height: 100vh; color: #e2e8f0;
+    display: flex; align-items: center; justify-content: center; padding: 18px; }
+  .card { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px; padding: 28px 26px; max-width: 420px; width: 100%; text-align: center; }
+  h1 { font-size: 20px; letter-spacing: .5px; }
+  p { font-size: 13px; opacity: .85; margin-top: 8px; line-height: 1.6; }
+  .btn { display: inline-block; margin: 16px 8px 0; padding: 11px 20px; border-radius: 12px;
+    background: linear-gradient(135deg,#4f46e5,#7c3aed); color: #fff; text-decoration: none;
+    font-size: 13.5px; font-weight: 700; }
+  .btn.ghost { background: rgba(255,255,255,.1); }
+  .status { margin-top: 18px; font-size: 11.5px; color: #94a3b8; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #64748b; margin-right: 6px; }
+  .dot.up { background: #22c55e; }
+  .dot.down { background: #ef4444; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>RUN BEYOND LIMITS 2026</h1>
+  <p>Official verification link hub. Runner QR codes point here — this address never changes.</p>
+  <div>
+    <a class="btn" id="siteBtn" href="#">Open Website</a>
+    <a class="btn ghost" href="/marathon_final/scan/">Booth Scanner</a>
+  </div>
+  <div class="status"><span class="dot" id="dot"></span><span id="statusLine">Checking service…</span></div>
+</div>
+<script>
+(function () {
+  fetch("config.json", { cache: "no-store" })
+    .then(function (r) { return r.json(); })
+    .then(function (cfg) {
+      var base = String(cfg.backend || "").replace(/\/+$/, "");
+      var dot = document.getElementById("dot"), line = document.getElementById("statusLine");
+      if (!base) { line.textContent = "Service starting…"; return; }
+      document.getElementById("siteBtn").href = base;
+      fetch(base + "/", { method: "HEAD", cache: "no-store" })
+        .then(function (r) {
+          dot.className = "dot " + (r.ok ? "up" : "down");
+          line.textContent = r.ok ? "Service online" : "Service starting…";
+        })
+        .catch(function () {
+          dot.className = "dot down";
+          line.textContent = "Service offline — try again shortly";
+        });
+    })
+    .catch(function () {
+      document.getElementById("statusLine").textContent = "Service starting…";
+    });
+})();
+</script>
+</body>
+</html>
